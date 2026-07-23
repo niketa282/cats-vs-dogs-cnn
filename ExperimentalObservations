@@ -1,0 +1,6 @@
+Experiment 1
+--------------
+Only Training and Testing set
+In eval.py observe Training accurracy: 99% Test accurracy: 77%. Clearly overfitting.
+Different ways to solve problem apply data augmentation, regularisation, dropout. Need to investigate which
+would be best.
