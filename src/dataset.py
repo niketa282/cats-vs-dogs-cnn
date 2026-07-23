@@ -3,7 +3,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 from pathlib import Path
 
-transform = transforms.Compose([
+test_transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.ToTensor(),
     transforms.Normalize(
@@ -12,17 +12,29 @@ transform = transforms.Compose([
     )
 ])
 
+train_transform = transforms.Compose([
+    transforms.Resize((128, 128)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2
+    ),
+    transforms.ToTensor()
+])
+
 train_path = Path("data") / "train"
 test_path = Path("data") / "test"
 
 train_dataset = ImageFolder(
     root=train_path,
-    transform=transform
+    transform=train_transform
 )
 
 test_dataset = ImageFolder(
     root=test_path,
-    transform=transform
+    transform=test_transform
 )
 
 train_dataloader = DataLoader(

@@ -4,3 +4,13 @@ Only Training and Testing set
 In eval.py observe Training accurracy: 99% Test accurracy: 77%. Clearly overfitting.
 Different ways to solve problem apply data augmentation, regularisation, dropout. Need to investigate which
 would be best.
+
+Experiment 2
+--------------
+Adding data augmentation to CNN to see how it helps solve overfitting. Training data accurracy is: 84.71% and
+Test Data accurracy is : 60.56%. Yes, it is less overfitting, but there's another issue now.After augmentation:
+
+Training accuracy dropped by about 15 percentage points.
+That's expected because the training images are now harder—every epoch the model sees slightly different versions of the same images.
+The test accuracy also dropped dramatically, from 77.46% to 60.56%. 
+Possible problems: augumentation to aggressive, training for too few epochs
