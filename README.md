@@ -162,13 +162,19 @@ The comparison focuses on:
 ```
 catsdogs-cnn/
 │
-├── dataset.py
-├── model.py
-├── train.py
-├── eval.py
-├── requirements.txt
+├── src/
+│   ├── dataset.py
+│   ├── eval.py
+│   ├── model.py
+│   ├── train.py
+│   ├── transfer_learning.py
+│   └── utils.py
+│
+├── .gitignore
+├── catsdogs_model.pth
 ├── README.md
-└── catsdogs_model.pth
+├── requirements.txt
+├── training_loss_plot.png
 ```
 
 ---
