@@ -7,6 +7,7 @@ would be best.
 
 Experiment 2
 --------------
+Only have Training and Testing set
 Adding data augmentation to CNN to see how it helps solve overfitting. Training data accurracy is: 84.71% and
 Test Data accurracy is : 60.56%. Yes, it is less overfitting, but there's another issue now.After augmentation:
 
@@ -19,5 +20,43 @@ Fix 1: Increased training to 20 epochs to see what happens
 Training accuracy :89.64%   Test accuracy :59.60% , slight improvement in training from before but
 test accuracy worse so maybe training for more epochs not the solution
 
+Sub Experiment 1
+--------------
+Added normalisation to training set, kept epoch at 10
 CNN with data augmentation: Fix the training data input distribution, add normalisation see what happens, epochs still 10
 Training accuracy :  89.20%  Test accuracy : 84.06%. Data augmentation reduced memorisation and improved performance on unseen cat and dog images.
+
+Sub Experiment 1
+--------------
+Ran the same i.e with the normalisation and data augmentation but increased epoch to 20
+Training accuracy : 92.41%  Test accuracy : 83.20%
+
+Conclusions
+
+| **Experiment**                      | **Training Accuracy** | **Test Accuracy** | **Train–Test Gap** |
+| ----------------------------------- | --------------------- | ----------------- | ------------------ |
+| Baseline CNN                        | 99.39%                | 77.46%            | 21.93%             |
+| CNN + Data Augmentation (10 epochs) | 89.20%                | **84.06%**        | **5.14%**          |
+| CNN + Data Augmentation (20 epochs) | 92.41%                | 83.20%            | 9.21%              |
+
+
+Baseline
+-Excellent training accuracy.
+-Much lower test accuracy.
+-Large gap → clear overfitting.
+
+Augmentation (10 epochs)
+-Lower training accuracy.
+-Highest test accuracy.
+-Smallest gap.
+-Best generalization.
+
+Augmentation (more epochs)
+-Training accuracy increased from 89.20% → 92.41%.
+-Test accuracy decreased slightly from 84.06% → 83.20%.
+
+This is a classic pattern:
+
+By training longer, the model fit the training data a bit better, but that extra fitting didn't translate into better performance on unseen images.
+
+The drop from 84.06% to 83.20% is only 0.86 percentage points, so it's not dramatic, but it suggests that 10 epochs may have been closer to the sweet spot for this particular setup.
