@@ -10,7 +10,7 @@ model = CatsDogsCNN()
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 10
+num_epochs = 20
 
 train_losses = []
 

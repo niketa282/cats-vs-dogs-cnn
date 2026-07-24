@@ -14,3 +14,8 @@ Training accuracy dropped by about 15 percentage points.
 That's expected because the training images are now harder—every epoch the model sees slightly different versions of the same images.
 The test accuracy also dropped dramatically, from 77.46% to 60.56%. 
 Possible problems: augumentation to aggressive, training for too few epochs
+
+Fix 1: Increased training to 20 epochs to see what happens
+Training accuracy :89.64%   Test accuracy :59.60% , slight improvement in training from before but
+test accuracy worse so maybe training for more epochs not the solution
+Fix 2: Fix the training data input distribution, add normalisation see what happens
