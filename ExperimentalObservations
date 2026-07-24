@@ -18,4 +18,6 @@ Possible problems: augumentation to aggressive, training for too few epochs
 Fix 1: Increased training to 20 epochs to see what happens
 Training accuracy :89.64%   Test accuracy :59.60% , slight improvement in training from before but
 test accuracy worse so maybe training for more epochs not the solution
-Fix 2: Fix the training data input distribution, add normalisation see what happens
+
+CNN with data augmentation: Fix the training data input distribution, add normalisation see what happens, epochs still 10
+Training accuracy :  89.20%  Test accuracy : 84.06%. Data augmentation reduced memorisation and improved performance on unseen cat and dog images.
