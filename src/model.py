@@ -32,6 +32,7 @@ class CatsDogsCNN(nn.Module):
             in_features=128,
             out_features=2
     )
+        self.dropout = torch.nn.Dropout(p=0.3)
 
     def forward(self, x):
        # print("Before convolution:", x.shape) 
@@ -53,6 +54,7 @@ class CatsDogsCNN(nn.Module):
         # print("After first linear layer:", x.shape)
         x = self.relu(x)
         # print("After ReLU:", x.shape)
+        x = self.dropout(x)
         x = self.fc2(x)
         # print("Final output shape:", x.shape)
         return x

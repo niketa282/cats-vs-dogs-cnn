@@ -94,3 +94,14 @@ leave for measuring metrics like
       precision
       recall
       F1 score
+
+Experiment 4 
+------------
+Trying to set dropout to 0.3 to see if it resolves mild overfitting from epoch = 7 in experiment 3
+The modified model achieved its lowest validation loss at epoch 8. After this point, training loss continued decreasing while validation loss increased, indicating the beginning of overfitting. Compared with the baseline, the minimum validation loss improved slightly and overfitting occurred one epoch later.
+
+The model improves until approximately epochs 8–9. After this point, training accuracy continues increasing while validation performance stops improving, suggesting mild overfitting
+
+Adding dropout reduced the training accuracy slightly and delayed the onset of overfitting, but it did not meaningfully improve validation accuracy or validation loss. Therefore, dropout provided little benefit for this model, possibly because the original model was only mildly overfitting.
+
+This does not mean dropout is ineffective generally. It means that for this architecture, dataset, and chosen dropout probability, it was not particularly useful.
