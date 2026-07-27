@@ -20,13 +20,13 @@ Fix 1: Increased training to 20 epochs to see what happens
 Training accuracy :89.64%   Test accuracy :59.60% , slight improvement in training from before but
 test accuracy worse so maybe training for more epochs not the solution
 
-Sub Experiment 1
+Sub Experiment 2
 --------------
 Added normalisation to training set, kept epoch at 10
 CNN with data augmentation: Fix the training data input distribution, add normalisation see what happens, epochs still 10
 Training accuracy :  89.20%  Test accuracy : 84.06%. Data augmentation reduced memorisation and improved performance on unseen cat and dog images.
 
-Sub Experiment 1
+Sub Experiment 2
 --------------
 Ran the same i.e with the normalisation and data augmentation but increased epoch to 20
 Training accuracy : 92.41%  Test accuracy : 83.20%
@@ -60,3 +60,37 @@ This is a classic pattern:
 By training longer, the model fit the training data a bit better, but that extra fitting didn't translate into better performance on unseen images.
 
 The drop from 84.06% to 83.20% is only 0.86 percentage points, so it's not dramatic, but it suggests that 10 epochs may have been closer to the sweet spot for this particular setup.
+
+Experiment 3 
+------------
+Improve workflow add validation set and modify eval.py, dataset.py and train.py
+
+In train.py calculate the training & validation losses and accuracies after each set
+
+In eval.py 
+leave for measuring metrics like     
+    accuracy_score,
+    confusion_matrix,
+    precision_score,
+    recall_score,
+    f1_score,
+    
+1. Split original training folder:
+      80% training
+      20% validation
+
+2. Train using training data.
+
+3. After every epoch:
+      measure validation loss and accuracy
+
+4. Save the model with the best validation accuracy.
+
+5. Load that saved model in eval.py.
+
+6. Evaluate it once on the untouched test set using:
+      accuracy
+      confusion matrix
+      precision
+      recall
+      F1 score

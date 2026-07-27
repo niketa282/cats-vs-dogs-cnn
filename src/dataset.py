@@ -1,9 +1,11 @@
+import torch
 from torchvision.datasets import ImageFolder
 from torchvision import transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 from pathlib import Path
 
-test_transform = transforms.Compose([
+# Used by validation and test data
+evaluation_transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.ToTensor(),
     transforms.Normalize(
@@ -12,6 +14,7 @@ test_transform = transforms.Compose([
     )
 ])
 
+# Used by training data
 train_transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.RandomHorizontalFlip(),
@@ -31,14 +34,45 @@ train_transform = transforms.Compose([
 train_path = Path("data") / "train"
 test_path = Path("data") / "test"
 
-train_dataset = ImageFolder(
+full_train_dataset = ImageFolder(
     root=train_path,
     transform=train_transform
 )
 
+full_validation_dataset = ImageFolder(
+    root=train_path,
+    transform=evaluation_transform
+)
+
 test_dataset = ImageFolder(
     root=test_path,
-    transform=test_transform
+      transform=evaluation_transform
+)
+
+# 80% training, 20% validation
+dataset_size = len(full_train_dataset)
+train_size = int(0.8 * dataset_size)
+validation_size = dataset_size - train_size
+
+# Fixed seed makes the split repeatable
+generator = torch.Generator().manual_seed(42)
+
+indices = torch.randperm(
+    dataset_size,
+    generator=generator
+).tolist()
+
+train_indices = indices[:train_size]
+validation_indices = indices[train_size:]
+
+train_dataset = Subset(
+    full_train_dataset,
+    train_indices
+)
+
+validation_dataset = Subset(
+    full_validation_dataset,
+    validation_indices
 )
 
 train_dataloader = DataLoader(
@@ -47,21 +81,27 @@ train_dataloader = DataLoader(
     shuffle=True
 )
 
+validation_dataloader = DataLoader(
+    validation_dataset,
+    batch_size=32,
+    shuffle=False
+)
+
 test_dataloader = DataLoader(
     test_dataset,
     batch_size=32,
     shuffle=False
 )
 
-print("Train classes:", train_dataset.classes)
-print("Test classes:", test_dataset.classes)
+print("Classes:", full_train_dataset.classes)
+print("Class mapping:", full_train_dataset.class_to_idx)
 
 print("Train images:", len(train_dataset))
+print("Validation images:", len(validation_dataset))
 print("Test images:", len(test_dataset))
-print("Total images:", len(train_dataset) + len(test_dataset))
 
 images, labels = next(iter(train_dataloader))
 print("Image batch shape:", images.shape) # (number of images, channels, height, width)
 print("Label batch shape:", labels.shape)
 
-print(train_dataset.class_to_idx)
+print("Class mapping:", full_train_dataset.class_to_idx)

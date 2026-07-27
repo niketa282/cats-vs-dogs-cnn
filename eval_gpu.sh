@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH --job-name=catsdogs-eval
-#SBATCH --partition=l4
+#SBATCH --partition=l4,swarm_l4,a100
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=6

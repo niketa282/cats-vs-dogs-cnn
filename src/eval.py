@@ -3,6 +3,15 @@ from model import CatsDogsCNN
 from dataset import test_dataloader, train_dataloader
 from tqdm import tqdm
 
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    precision_score,
+    recall_score,
+    f1_score,
+    classification_report
+)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"Using device: {device}")
@@ -15,39 +24,68 @@ model.load_state_dict(torch.load("catsdogs_model.pth", map_location=device))
 
 model.eval()
 
-# Training accuracy
-correct_predictions_training = 0
-total_predictions_training = 0
+all_labels = []
+all_predictions = []
+
+# Test accurac
 
 with torch.no_grad():
-    for batch_number, (images, labels) in enumerate(tqdm(train_dataloader)):
+    for batch_number, (images, labels) in enumerate(tqdm(test_dataloader,
+        desc="Testing")):
         images = images.to(device)
         labels = labels.to(device)
         output = model(images)
         predicted_classes = output.argmax(dim=1)
-        correct_predictions_training += (predicted_classes == labels).sum().item()
-        total_predictions_training += len(labels)
-training_accuracy = 100 * correct_predictions_training / total_predictions_training
+       
+        all_labels.extend(
+            labels.cpu().tolist()
+        )
+        
+        all_predictions.extend(
+            predicted_classes.cpu().tolist()
+        )
+        
+        accuracy = accuracy_score(
+            all_labels,
+            all_predictions
+        )
+        
+        confusion = confusion_matrix(
+            all_labels,
+            all_predictions
+        )
 
-print(f"Final Training Accuracy: {training_accuracy:.2f}%")
+        precision = precision_score( # when the model says dog how often is it right?
+            all_labels,
+            all_predictions,
+            average="binary"
+        )
 
+        recall = recall_score( # of all the dogs, how many did the model correctly identify?
+            all_labels,
+            all_predictions,
+            average="binary"
+       )
+        
+        f1 = f1_score(
+            all_labels,
+            all_predictions,
+            average="binary"
+     )
+        
+print(f"\nTest Accuracy: {accuracy * 100:.2f}%")
+print(f"Test Precision: {precision:.4f}")
+print(f"Test Recall: {recall:.4f}")
+print(f"Test F1 Score: {f1:.4f}")
 
-# Test accuracy
+print("\nConfusion Matrix:")
+print(confusion)
 
-correct_predictions_test = 0
-total_predictions_test = 0
-
-with torch.no_grad():
-    for batch_number, (images, labels) in enumerate(tqdm(test_dataloader)):
-        images = images.to(device)
-        labels = labels.to(device)
-        output = model(images)
-        predicted_classes = output.argmax(dim=1)
-       # print(images.shape)  [batch size, 3, 128, 128]
-       # print(output.shape)   [batch size, 2]
-       # print(predicted_classes.shape)  [batch size]
-       # print(f"Predicted: {predicted_classes}") prints the tensor
-        correct_predictions_test += (predicted_classes == labels).sum().item()
-        total_predictions_test += len(labels)
-    test_accuracy = correct_predictions_test / total_predictions_test * 100
-print(f"Test Accuracy: {test_accuracy:.2f}%")
+print("\nClassification Report:")
+print(
+    classification_report(
+        all_labels,
+        all_predictions,
+        target_names=["Cat", "Dog"]
+    )
+)
