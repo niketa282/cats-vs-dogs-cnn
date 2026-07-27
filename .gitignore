@@ -7,3 +7,5 @@ __pycache__/
 .ipynb_checkpoints/
 understanding project notes.txt
 data/
+*.log
+instructionsForRunningonGPU.txt

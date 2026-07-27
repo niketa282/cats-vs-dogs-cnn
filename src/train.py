@@ -5,12 +5,19 @@ from model import CatsDogsCNN
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-model = CatsDogsCNN()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+print(f"Using device: {device}")
+
+if device.type == "cuda":
+    print(f"GPU: {torch.cuda.get_device_name(0)}")
+
+model = CatsDogsCNN().to(device)
 
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 20
+num_epochs = 10
 
 train_losses = []
 
@@ -20,6 +27,8 @@ for epoch in range(num_epochs):
     
     for batch_number, (images, labels) in enumerate(tqdm(train_dataloader)):
 
+        images = images.to(device)
+        labels = labels.to(device)
         output = model(images)
         loss = loss_fn(output, labels)
         optimizer.zero_grad()
@@ -44,8 +53,8 @@ plt.xticks(epochs)
 plt.xlabel("Epoch")
 plt.ylabel("Training Loss")
 plt.title("Training Loss over Time")
-plt.show()
-plt.savefig("training_loss_plot.png")
+plt.savefig("training_loss_plot_iridis.png")
+plt.close()
 
 torch.save(model.state_dict(), "catsdogs_model.pth")
 print("Model saved successfully!")
