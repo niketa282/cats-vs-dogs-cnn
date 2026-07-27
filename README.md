@@ -174,7 +174,10 @@ catsdogs-cnn/
 ├── catsdogs_model.pth
 ├── README.md
 ├── requirements.txt
-├── training_loss_plot.png
+├── training_loss_plot_irdis.png
+├── eval_gpu.sh
+├── train_gpu.sh
+
 ```
 
 ---
