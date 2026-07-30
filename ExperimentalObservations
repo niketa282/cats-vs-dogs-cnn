@@ -105,3 +105,13 @@ The model improves until approximately epochs 8–9. After this point, training 
 Adding dropout reduced the training accuracy slightly and delayed the onset of overfitting, but it did not meaningfully improve validation accuracy or validation loss. Therefore, dropout provided little benefit for this model, possibly because the original model was only mildly overfitting.
 
 This does not mean dropout is ineffective generally. It means that for this architecture, dataset, and chosen dropout probability, it was not particularly useful.
+
+Experiment 5
+-------------
+
+Model	        Best epoch	   Best validation accuracy	    Validation loss	     Test accuracy	   Test F1
+CNN without 
+augmentation	
+
+CNN with 
+augmentation	9	              About 81%	                     About 0.415	       82.66%               0.8322
