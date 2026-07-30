@@ -111,7 +111,16 @@ Experiment 5
 
 Model	        Best epoch	   Best validation accuracy	    Validation loss	     Test accuracy	   Test F1
 CNN without 
-augmentation	
+augmentation	3                   76.17%                        0.4957               76.58%                0.7475
 
 CNN with 
 augmentation	9	              About 81%	                     About 0.415	       82.66%               0.8322
+
+These results provide clear evidence that data augmentation reduced overfitting and improved generalisation.
+
+The augmented model improved test accuracy by approximately:
+82.66%−76.58%=6.08%
+
+It also improved test F1 by:
+0.8322−0.7475=0.0847
+The custom CNN trained without augmentation overfit rapidly, reaching its best validation performance at epoch 3 while training accuracy continued increasing. Introducing horizontal flips, rotations and colour jitter delayed overfitting to epoch 9 and improved generalisation.

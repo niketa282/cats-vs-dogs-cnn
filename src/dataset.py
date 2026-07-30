@@ -17,13 +17,6 @@ evaluation_transform = transforms.Compose([
 # Used by training data
 train_transform = transforms.Compose([
     transforms.Resize((128, 128)),
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(10),
-    transforms.ColorJitter(
-        brightness=0.2,
-        contrast=0.2,
-        saturation=0.2
-    ),
     transforms.ToTensor(),
         transforms.Normalize(
         mean=[0.485, 0.456, 0.406],

@@ -128,7 +128,7 @@ for epoch in range(num_epochs):
 
         torch.save(
             model.state_dict(),
-            "catsdogs_best_model.pth"
+            "custom_cnn_no_augmentation.pth"
         )
 
         print(
