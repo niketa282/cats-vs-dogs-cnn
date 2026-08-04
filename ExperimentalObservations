@@ -124,3 +124,37 @@ The augmented model improved test accuracy by approximately:
 It also improved test F1 by:
 0.8322−0.7475=0.0847
 The custom CNN trained without augmentation overfit rapidly, reaching its best validation performance at epoch 3 while training accuracy continued increasing. Introducing horizontal flips, rotations and colour jitter delayed overfitting to epoch 9 and improved generalisation.
+
+
+Experiment 6
+-------------
+The aim of this experiment is to compare the performance of the custom CNN with a pretrained ResNet18 model on the cats-versus-dogs classification task
+
+The custom CNN is trained from randomly initialized weights. ResNet18 uses convolutional features pretrained on ImageNet, while its original classification layer is replaced with a new two-class output layer. The pretrained ResNet18 feature-extraction layers are frozen, so only the new final classification layer is trained
+
+Experimental setup
+Both models are trained and validated using the same dataset split to ensure a consistent comparison. A fixed random seed of 42 is used to improve reproducibility.
+The following conditions are kept consistent:
+Training epochs: 10
+Batch size: 32
+Optimizer: Adam
+Learning rate: 0.001
+Loss function: cross-entropy loss
+Training augmentations: random horizontal flipping, rotation and colour jitter
+Dataset split: 80% training and 20% validation
+
+The custom CNN uses 128 × 128 images to remain compatible with its architecture. ResNet18 uses 224 × 224 images, matching the standard input resolution used by the pretrained model.
+
+Training and validation loss and accuracy are recorded after every epoch. The comparison uses the final-epoch results and the highest validation accuracy observed during training.
+Metrics
+Final training accuracy: Training accuracy after epoch 10.
+Final validation accuracy: Validation accuracy after epoch 10.
+Final training loss: Average training loss after epoch 10.
+Final validation loss: Average validation loss after epoch 10.
+Best validation accuracy: Highest validation accuracy observed across all 10 epochs.
+
+Model	       Final train accuracy	  Final validation accuracy	Final train loss	Final validation loss	Best validation accuracy
+
+Custom CNN
+
+ResNet18

@@ -4,8 +4,12 @@ from torchvision import transforms
 from torch.utils.data import DataLoader, Subset
 from pathlib import Path
 
+# --------------------------------------------------
+# Custom CNN transforms: 128 × 128
+# --------------------------------------------------
+
 # Used by validation and test data
-evaluation_transform = transforms.Compose([
+custom_evaluation_transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.ToTensor(),
     transforms.Normalize(
@@ -15,7 +19,7 @@ evaluation_transform = transforms.Compose([
 ])
 
 # Used by training data
-train_transform = transforms.Compose([
+custom_train_transform  = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
@@ -34,23 +38,23 @@ train_transform = transforms.Compose([
 train_path = Path("data") / "train"
 test_path = Path("data") / "test"
 
-full_train_dataset = ImageFolder(
+custom_full_train_dataset = ImageFolder(
     root=train_path,
-    transform=train_transform
+    transform=custom_train_transform
 )
 
 full_validation_dataset = ImageFolder(
     root=train_path,
-    transform=evaluation_transform
+    transform=custom_evaluation_transform
 )
 
 test_dataset = ImageFolder(
     root=test_path,
-      transform=evaluation_transform
+      transform=custom_evaluation_transform
 )
 
 # 80% training, 20% validation
-dataset_size = len(full_train_dataset)
+dataset_size = len(custom_full_train_dataset)
 train_size = int(0.8 * dataset_size)
 validation_size = dataset_size - train_size
 
@@ -66,7 +70,7 @@ train_indices = indices[:train_size]
 validation_indices = indices[train_size:]
 
 train_dataset = Subset(
-    full_train_dataset,
+    custom_full_train_dataset,
     train_indices
 )
 
@@ -93,15 +97,85 @@ test_dataloader = DataLoader(
     shuffle=False
 )
 
-print("Classes:", full_train_dataset.classes)
-print("Class mapping:", full_train_dataset.class_to_idx)
+# --------------------------------------------------
+# ResNet18 transforms: 224 × 224
+# --------------------------------------------------
 
-print("Train images:", len(train_dataset))
-print("Validation images:", len(validation_dataset))
-print("Test images:", len(test_dataset))
+resnet_evaluation_transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
 
-images, labels = next(iter(train_dataloader))
-print("Image batch shape:", images.shape) # (number of images, channels, height, width)
-print("Label batch shape:", labels.shape)
+resnet_train_transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2
+    ),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
 
-print("Class mapping:", full_train_dataset.class_to_idx)
+resnet_full_train_dataset = ImageFolder(
+    root=train_path,
+    transform=resnet_train_transform
+)
+
+resnet_full_validation_dataset = ImageFolder(
+    root=train_path,
+    transform=resnet_evaluation_transform
+)
+
+resnet_test_dataset = ImageFolder(
+    root=test_path,
+    transform=resnet_evaluation_transform
+)
+
+resnet_train_dataset = Subset(
+    resnet_full_train_dataset,
+    train_indices
+)
+
+resnet_validation_dataset = Subset(
+    resnet_full_validation_dataset,
+    validation_indices
+)
+
+resnet_train_dataloader = DataLoader(
+    resnet_train_dataset,
+    batch_size=32,
+    shuffle=True
+)
+
+resnet_validation_dataloader = DataLoader(
+    resnet_validation_dataset,
+    batch_size=32,
+    shuffle=False
+)
+
+resnet_test_dataloader = DataLoader(
+    resnet_test_dataset,
+    batch_size=32,
+     shuffle=False
+)
+
+print("Classes:", custom_full_train_dataset.classes)
+print("Class mapping:", custom_full_train_dataset.class_to_idx)
+
+print("Custom CNN train images:", len(train_dataset))
+print("Custom CNN validation images:", len(validation_dataset))
+print("Custom CNN test images:", len(test_dataset))
+
+print("ResNet18 train images:", len(resnet_train_dataset))
+print("ResNet18 validation images:", len(resnet_validation_dataset))
+print("ResNet18 test images:", len(resnet_test_dataset))

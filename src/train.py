@@ -4,6 +4,17 @@ from dataset import train_dataloader, validation_dataloader
 from model import CatsDogsCNN
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import random
+
+seed = 42
+random.seed(seed)
+torch.manual_seed(seed)
+
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(seed)
+
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -26,6 +37,7 @@ train_accuracies = []
 validation_accuracies = []
 
 best_validation_accuracy = 0.0
+best_training_accuracy = 0.0
 
 for epoch in range(num_epochs):
  #-----------------------------------   
@@ -48,13 +60,13 @@ for epoch in range(num_epochs):
         
         loss.backward()
         optimizer.step()
-        running_loss += loss.item() 
+        running_loss += loss.item() * labels.size(0)
         predicted_classes = output.argmax(dim=1)
         correct_train_predictions += (predicted_classes == labels).sum().item()
         total_train_predictions += labels.size(0)
    
     # Calculate average loss for this epoch
-    average_train_loss = running_loss / len(train_dataloader)
+    average_train_loss = running_loss / total_train_predictions
     train_accuracy = (
         correct_train_predictions
         / total_train_predictions
@@ -88,7 +100,7 @@ for epoch in range(num_epochs):
             outputs = model(images)
             loss = loss_fn(outputs, labels)
             
-            running_validation_loss += loss.item()
+            running_validation_loss += loss.item() * labels.size(0)
             predicted_classes = outputs.argmax(dim=1)
             
             correct_validation_predictions += (
@@ -99,7 +111,7 @@ for epoch in range(num_epochs):
             
         average_validation_loss = (
             running_validation_loss
-          / len(validation_dataloader)
+          / total_validation_predictions
     )
         validation_accuracy = (
             correct_validation_predictions
@@ -121,9 +133,11 @@ for epoch in range(num_epochs):
         f"Validation loss: {average_validation_loss:.4f} | "
         f"Validation accuracy: {validation_accuracy:.2f}%"
     )
+     
+    if train_accuracy > best_training_accuracy:
+        best_training_accuracy = train_accuracy
     
     if validation_accuracy > best_validation_accuracy:
-
         best_validation_accuracy = validation_accuracy
 
         torch.save(
@@ -156,7 +170,7 @@ plt.plot(
 plt.xticks(epochs)
 plt.xlabel("Epoch")
 plt.ylabel("Loss")
-plt.title("Training and Validation Loss")
+plt.title("Custom CNN Training and Validation Loss")
 plt.legend()
 plt.savefig("loss_plot_iridis.png")
 plt.close()
@@ -179,7 +193,17 @@ plt.plot(
 plt.xticks(epochs)
 plt.xlabel("Epoch")
 plt.ylabel("Accuracy (%)")
-plt.title("Training and Validation Accuracy")
+plt.title("Custom CNNTraining and Validation Accuracy")
 plt.legend()
 plt.savefig("accuracy_plot_iridis.png")
 plt.close()
+
+print(
+    f"Best training accuracy: "
+    f"{best_training_accuracy:.2f}%"
+)
+
+print(
+    f"Best validation accuracy: "
+    f"{best_validation_accuracy:.2f}%"
+)
