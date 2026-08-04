@@ -20,7 +20,7 @@ if device.type == "cuda":
     print(f"GPU: {torch.cuda.get_device_name(0)}")
     
 model = CatsDogsCNN().to(device)
-model.load_state_dict(torch.load("custom_cnn_no_augmentation.pth", map_location=device))
+model.load_state_dict(torch.load("catsdogs_best_model.pth", map_location=device))
 
 model.eval()
 
