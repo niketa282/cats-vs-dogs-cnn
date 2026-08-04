@@ -155,6 +155,6 @@ Best validation accuracy: Highest validation accuracy observed across all 10 epo
 
 Model	       Final train accuracy	  Final validation accuracy	Final train loss	Final validation loss	Best validation accuracy
 
-Custom CNN
+Custom CNN   85.28%                     81.03%                       0.3346              0.4163                 82.15% (epoch 6)
 
-ResNet18
+ResNet18    98.47%                     98.30%                       0.0413               0.0467               98.85% (epoch 5)
