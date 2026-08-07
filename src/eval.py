@@ -47,32 +47,32 @@ with torch.no_grad():
            predicted_classes.cpu().tolist()
         )
     
-    # Calculate metrics for all the images in the test set
-    accuracy = accuracy_score(
-        all_labels,
-        all_predictions
-    )
-    
-    confusion = confusion_matrix(
-        all_labels,
-        all_predictions
-    )   
-    precision = precision_score( # when the model says dog how often is it right?
-        all_labels,
-        all_predictions,
-        average="binary"
-    )   
-    recall = recall_score( # of all the dogs, how many did the model correctly identify?
-        all_labels,
-        all_predictions,
-        average="binary"
-    )
-    
-    f1 = f1_score(
-        all_labels,
-        all_predictions,
-        average="binary"
-    )  
+# Calculate metrics for all the images in the test set
+accuracy = accuracy_score(
+    all_labels,
+    all_predictions
+)
+
+confusion = confusion_matrix(
+    all_labels,
+    all_predictions
+)   
+precision = precision_score( # when the model says dog how often is it right?
+    all_labels,
+    all_predictions,
+    average="binary"
+)   
+recall = recall_score( # of all the dogs, how many did the model correctly identify?
+    all_labels,
+    all_predictions,
+    average="binary"
+)
+
+f1 = f1_score(
+    all_labels,
+    all_predictions,
+    average="binary"
+)  
         
 print(f"\nTest Accuracy: {accuracy * 100:.2f}%")
 print(f"Test Precision: {precision:.4f}")
@@ -87,6 +87,7 @@ print(
     classification_report(
         all_labels,
         all_predictions,
-        target_names=["Cat", "Dog"]
+        target_names=["Cat", "Dog"],
+        zero_division=0
     )
 )

@@ -158,3 +158,23 @@ Model	       Final train accuracy	  Final validation accuracy	Final train loss	F
 Custom CNN   85.28%                     81.03%                       0.3346              0.4163                 82.15% (epoch 6)
 
 ResNet18    98.47%                     98.30%                       0.0413               0.0467               98.85% (epoch 5)
+
+
+Experiment 7
+-------------
+The aim of this experiment is to evaluate how well the trained Custom CNN and pretrained ResNet18 generalise to previously unseen test images. The best checkpoint for each model, selected using validation accuracy, is loaded and used for inference on the same held-out test set. Test accuracy, precision, recall and F1 score are compared to determine whether ResNet18 maintains its strong validation performance, whether it outperforms the Custom CNN on unseen data, and whether either model shows evidence of overfitting through a large validation-to-test performance drop.
+
+Model 	Best Validation Accuracy  Test Accuracy	Dog Precision	Dog Recall	  Dog F1 Score	  Validation → Test Drop
+Custom CNN	     82.15%	               81.42%          0.8171            0.8096        0.8133            0.73
+
+ResNet18	     98.85%                98.64%          0.9887            0.9840        0.9864            0.21
+
+- Precision, Recall, F1 Score Dog class metrics because pos = 1 is taken as default value in lines 83-97 of
+the eval_transfer learning.py. To do it for cats you would explicity need to set pos =0. Also can be double
+checked with confusion matrix.
+
+ResNet18 substantially outperformed the Custom CNN across all test metrics. ResNet18 achieved a test accuracy of 98.64% and an F1 score of 0.9864, compared with 81.42% and 0.8133 respectively for the Custom CNN. Its high precision and recall also indicate that it produced very few false positive and false negative predictions.
+
+The validation-to-test accuracy drop for ResNet18 was only 0.21 percentage points, compared with 0.73 percentage points for the Custom CNN. This suggests that ResNet18 generalises well to previously unseen test images and that its high validation performance was representative of its test performance. There is therefore little evidence of substantial overfitting.
+
+Overall, the results indicate that using pretrained ImageNet features provides a considerable advantage over training the Custom CNN from randomly initialised weights for the cats-versus-dogs classification task.
