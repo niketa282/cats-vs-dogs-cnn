@@ -1,6 +1,6 @@
 import torch
 from model import CatsDogsCNN
-from dataset import test_dataloader, train_dataloader
+from dataset import test_dataloader
 from tqdm import tqdm
 
 from sklearn.metrics import (
@@ -27,51 +27,52 @@ model.eval()
 all_labels = []
 all_predictions = []
 
-# Test accurac
+# Collect predictions across the complete test set
 
 with torch.no_grad():
     for batch_number, (images, labels) in enumerate(tqdm(test_dataloader,
         desc="Testing")):
+        # Run the inference on every batch
         images = images.to(device)
         labels = labels.to(device)
         output = model(images)
         predicted_classes = output.argmax(dim=1)
        
+       # Collect all true labels and predcitcions
         all_labels.extend(
-            labels.cpu().tolist()
+           labels.cpu().tolist()
         )
-        
+    
         all_predictions.extend(
-            predicted_classes.cpu().tolist()
+           predicted_classes.cpu().tolist()
         )
-        
-        accuracy = accuracy_score(
-            all_labels,
-            all_predictions
-        )
-        
-        confusion = confusion_matrix(
-            all_labels,
-            all_predictions
-        )
-
-        precision = precision_score( # when the model says dog how often is it right?
-            all_labels,
-            all_predictions,
-            average="binary"
-        )
-
-        recall = recall_score( # of all the dogs, how many did the model correctly identify?
-            all_labels,
-            all_predictions,
-            average="binary"
-       )
-        
-        f1 = f1_score(
-            all_labels,
-            all_predictions,
-            average="binary"
-     )
+    
+    # Calculate metrics for all the images in the test set
+    accuracy = accuracy_score(
+        all_labels,
+        all_predictions
+    )
+    
+    confusion = confusion_matrix(
+        all_labels,
+        all_predictions
+    )   
+    precision = precision_score( # when the model says dog how often is it right?
+        all_labels,
+        all_predictions,
+        average="binary"
+    )   
+    recall = recall_score( # of all the dogs, how many did the model correctly identify?
+        all_labels,
+        all_predictions,
+        average="binary"
+    )
+    
+    f1 = f1_score(
+        all_labels,
+        all_predictions,
+        average="binary"
+    )  
         
 print(f"\nTest Accuracy: {accuracy * 100:.2f}%")
 print(f"Test Precision: {precision:.4f}")
